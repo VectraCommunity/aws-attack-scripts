@@ -9,11 +9,22 @@ export AWS_ACCESS_KEY_ID=$(jq -r '.AccessKeyId' <<< ${sts_session})
 export AWS_SESSION_TOKEN=$(jq -r '.Token' <<< ${sts_session})
 export AWS_SECRET_ACCESS_KEY=$(jq -r '.SecretAccessKey' <<< ${sts_session})
 export AWS_REGION=us-east-1
+echo
+echo $AWS_ACCESS_KEY_ID
+echo
+echo $AWS_SECRET_ACCESS_KEY
+echo
+echo $AWS_SESSION_TOKEN
+echo
 sleep 5
 echo 'set aws environment variables'
 
-
 echo 'set keys in pacu'
+
+if [[ $(../pacu/cli.py --session cloud_breach_s3) == *"Session could not be found"* ]]; then
+   ../pacu/cli.py --new-session cloud_breach_s3
+fi
+
 ../pacu/cli.py --activate-session --session cloud_breach_s3
 ../pacu/cli.py --session cloud_breach_s3 --set-keys cloud_breach,$AWS_ACCESS_KEY_ID,$AWS_SECRET_ACCESS_KEY,$AWS_SESSION_TOKEN
 ../pacu/cli.py --session cloud_breach_s3 --whoami

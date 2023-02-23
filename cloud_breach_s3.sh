@@ -19,7 +19,7 @@ echo 'aws_secret_access_key = ' $AWS_SECRET_ACCESS_KEY
 echo
 echo 'aws_session_token = ' $AWS_SESSION_TOKEN
 echo
-exit
+
 sleep 5
 echo 'set aws environment variables'
 

@@ -1,6 +1,16 @@
 export AWS_PAGER=""
 export AWS_REGION='us-east-1'
 
+
+# The following variables should be set in the lambda_hijacking.config
+# USERNAME 
+# AWS_ACCESS_KEY 
+# AWS_SECRET_KEY 
+# AWS_ACCOUNT 
+# ADMIN_AWS_ACCESS_KEY 
+# ADMIN_AWS_SECRET_KEY 
+# ADMIN_SESSION_TOKEN
+
 . ./lambda_hijacking.config
 
 export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY

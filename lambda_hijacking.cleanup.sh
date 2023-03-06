@@ -1,5 +1,9 @@
 export AWS_PAGER=""
 
+# The following variables should be set in the lambda_hijacking.cleanup.config
+# ADMIN_AWS_ACCESS_KEY 
+# ADMIN_AWS_SECRET_KEY 
+# ADMIN_SESSION_TOKEN
 . ./lambda_hijacking.cleanup.config
 
 ############################################################## This code is different for automated demo attack

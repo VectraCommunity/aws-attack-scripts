@@ -1,3 +1,7 @@
+# The following variables should be set in the cloud_breach_s3.config
+# S3_BUCKET 
+# IP_ADDRESS 
+
 . ./cloud_breach_s3.config
 
 echo 'ssrf attack'

